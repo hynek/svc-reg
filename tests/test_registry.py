@@ -17,7 +17,7 @@ import svcs
 
 from .fake_factories import async_str_gen_factory, str_gen_factory
 from .helpers import nop
-from .ifaces import AnotherService, Interface, Service
+from .ifaces import AnotherService, Interface, Service, YetAnotherService
 
 
 needs_working_async_mock = pytest.mark.skipif(
@@ -49,6 +49,12 @@ class TestRegistry:
         repr of an empty registry says 0 registered services.
         """
         assert "<svcs.Registry(num_services=0)>" == repr(registry)
+
+    def test_iter_empty(self, registry):
+        """
+        Iterating over an empty registry returns nothing.
+        """
+        assert not list(registry)
 
     def test_repr_counts(self, registry):
         """
@@ -280,6 +286,16 @@ class TestRegistry:
 
         assert Service in registry
         assert AnotherService not in registry
+
+    def test_iter(self, registry):
+        """
+        Iterating over a registry returns all registered services types.
+        """
+        registry.register_factory(Service, Service)
+        registry.register_factory(AnotherService, AnotherService)
+        registry.register_value(YetAnotherService, YetAnotherService)
+
+        assert {Service, AnotherService, YetAnotherService} == set(registry)
 
     def test_gc_warning(self, recwarn):
         """
