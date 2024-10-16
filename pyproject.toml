@@ -38,7 +38,7 @@ dependencies = [
   "attrs>=21.3.0", # attrs namespace
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 docs = [
   "sphinx>=7.2.2",
   "sphinx-design",
@@ -60,7 +60,13 @@ docs = [
 ]
 tests = ["pytest", "pytest-asyncio", "sybil>=6"]
 typing = ["mypy>=1.4", "fastapi", "flask", "starlette", "aiohttp", "pyramid"]
-dev = ["svcs[tests,typing]", "tox>4", "tox-uv", "httpx"]
+dev = [
+  { include-group = "tests" },
+  { include-group = "typing" },
+  "tox>4",
+  "tox-uv",
+  "httpx",
+]
 
 [project.urls]
 Changelog = "https://github.com/hynek/svcs/blob/main/CHANGELOG.md"
