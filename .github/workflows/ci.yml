@@ -153,7 +153,6 @@ jobs:
     name: Pyright Codebase
     runs-on: ubuntu-latest
     needs: build-package
-
     steps:
       - name: Download pre-built packages
         uses: actions/download-artifact@v4
@@ -166,11 +165,10 @@ jobs:
           python-version-file: .python-version-default
       - uses: hynek/setup-cached-uv@v2
 
-      - run: |
-          uv venv
-          uv pip install .[typing]
-          echo "$PWD/.venv/bin" >> $GITHUB_PATH
-      - uses: jakebailey/pyright-action@v2
+      - run: >
+          uvx --with tox-uv
+          tox run -e pyright
+
 
 
   docs:
@@ -208,7 +206,7 @@ jobs:
 
       - run: |
           uv venv
-          uv pip install -e .[dev]
+          uv pip install --group dev --editable .
           source .venv/bin/activate
 
           python -Ic 'import svcs'
